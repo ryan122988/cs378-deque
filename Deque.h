@@ -104,6 +104,7 @@ class MyDeque {
 */
         friend bool operator == (const MyDeque& lhs, const MyDeque& rhs) {
             // <your code>
+            return(lhs.size() == rhs.size()) && std::equal(lhs.begin(), lhs.end(), rhs.begin());
             // you must use std::equal()
             return true;}
 
@@ -116,6 +117,7 @@ class MyDeque {
 */
         friend bool operator < (const MyDeque& lhs, const MyDeque& rhs) {
             // <your code>
+return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
             // you must use std::lexicographical_compare()
             return true;}
 
@@ -125,7 +127,14 @@ class MyDeque {
         // ----
 
         allocator_type _a;
-
+        typename Alloc::template rebind <T*>:other second_a;
+        T** container;
+        unsigned int startRow;
+        unsigned int endRow;
+        unsigned int startColumn;
+        unsigned int endColumn;
+        unsigned int numRows;
+        unsigned int numColumns;
         // <your data>
 
     private:
@@ -135,6 +144,7 @@ class MyDeque {
 
         bool valid () const {
             // <your code>
+            return (!_b && !_e && !_l) ||(__b <=_e) && (_e <=_l);
             return true;}
 
     public:
@@ -499,8 +509,29 @@ class MyDeque {
         /**
 * <your documentation>
 */
+
+
+       /* allocator_type _a;
+        typename Alloc::template rebind <T*>:other second_a;
+        T** container;
+        unsigned int startOfRow;
+        unsigned int endOfRow;
+        unsigned int startOfColumn;
+        unsigned int endOfColumn;
+        unsigned int numRows;
+        unsigned int numColumns;*/
+
         explicit MyDeque (const allocator_type& a = allocator_type()) {
             // <your code>
+            numRows = 20;
+            numColumns =20;
+            container = second_a.allocate(numRows);
+            fill(container+numRows, (T*)NULL);
+            container[numRows/4] = this->a.allocate(20);
+            startRow = numRows/2;
+            startColumn = 10;          
+            endRow = numRows/2;
+            endColumn = 10;  
             assert(valid());}
 
         /**
@@ -508,6 +539,7 @@ class MyDeque {
 */
         explicit MyDeque (size_type s, const_reference v = value_type(), const allocator_type& a = allocator_type()) {
             // <your code>
+            
             assert(valid());}
 
         /**
@@ -515,6 +547,9 @@ class MyDeque {
 */
         MyDeque (const MyDeque& that) {
             // <your code>
+            _temp = that._a;
+            container = _temp.allocate(that.size());
+            
             assert(valid());}
 
         // ----------
