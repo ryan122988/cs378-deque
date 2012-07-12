@@ -127,14 +127,16 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
         // ----
 
         allocator_type _a;
-        typename Alloc::template rebind <T*>:other second_a;
+        typename allocator_type::template rebind <T*>::other second_a;
         T** container;
-        unsigned int startRow;
-        unsigned int endRow;
-        unsigned int startColumn;
-        unsigned int endColumn;
-        unsigned int numRows;
-        unsigned int numColumns;
+        int* startRow;
+        int* endRow;
+        int* startColumn;
+        int* endColumn;
+        int numRows;
+        int numColumns;
+        size_type mySize;
+        int capacity;
         // <your data>
 
     private:
@@ -144,7 +146,7 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 
         bool valid () const {
             // <your code>
-            return (!_b && !_e && !_l) ||(__b <=_e) && (_e <=_l);
+            //return (!_b && !_e && !_l) ||(__b <=_e) && (_e <=_l);
             return true;}
 
     public:
@@ -174,7 +176,8 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 */
                 friend bool operator == (const iterator& lhs, const iterator& rhs) {
                     // <your code>
-                    return true;}
+                    return (lhs._p == rhs._p) && (lhs._i == rhs._i);
+                  }
 
                 /**
 * <your documentation>
@@ -208,7 +211,12 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
                 // ----
 
                 // <your data>
-
+                MyDeque* _p;
+                int* startRow;
+                int* endRow;
+                int* startColumn;
+                int* endColumn;
+                std::size_t _i;
             private:
                 // -----
                 // valid
@@ -523,15 +531,17 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 
         explicit MyDeque (const allocator_type& a = allocator_type()) {
             // <your code>
-            numRows = 20;
-            numColumns =20;
+            numRows = (unsigned int) 1;
+            numColumns = (unsigned int) 1;
             container = second_a.allocate(numRows);
-            fill(container+numRows, (T*)NULL);
-            container[numRows/4] = this->a.allocate(20);
-            startRow = numRows/2;
-            startColumn = 10;          
-            endRow = numRows/2;
-            endColumn = 10;  
+            container[0] = startRow = startColumn = endRow = endColumn = this->_a.allocate(1);
+          //  startRow = 0;
+           // startColumn = 0;          
+           // endRow = 0;
+            //endColumn = 0;  
+	    mySize = 1;
+            capacity = 1;
+            //my_uninitialized_fill(_a, startRow, endRow, _a);
             assert(valid());}
 
         /**
@@ -539,7 +549,12 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 */
         explicit MyDeque (size_type s, const_reference v = value_type(), const allocator_type& a = allocator_type()) {
             // <your code>
-            
+            container = startRow = endRow = second_a.allocate(1);
+	    container[0] = startColumn =  second_a.allocate(s);
+            endColumn = startColumn + s;
+            my_uninitialized_fill(second_a, startColumn, endColumn, v);
+            mySize = s;
+            capacity = (int)s;
             assert(valid());}
 
         /**
@@ -547,9 +562,13 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 */
         MyDeque (const MyDeque& that) {
             // <your code>
-            _temp = that._a;
-            container = _temp.allocate(that.size());
-            
+            allocator_type _temp = that._a;
+            container = startRow = endRow = _temp.allocate(1);
+	    container[0] = startColumn = _temp.allocate(that.size());
+            endColumn = startColumn + that.size();
+            my_uninitialized_copy(_temp, that.begin(), that.end(), begin());
+            mySize = that.size();
+            capacity = (int) that.size();
             assert(valid());}
 
         // ----------
@@ -561,6 +580,10 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 */
         ~MyDeque () {
             // <your code>
+            if(container){
+                clear();
+                second_a.deallocate(container, capacity );
+            }
             assert(valid());}
 
         // ----------
@@ -787,8 +810,18 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 * <your documentation>
 */
         size_type size () const {
-            // <your code>
-            return 0;}
+            // <your code> 
+            size_type output;
+            unsigned int temp = *endRow - *startRow;
+            if(temp == 0){
+                output = (size_type)(*endColumn - *startColumn);
+            }
+            else{
+                --temp;
+                output = (size_type)(*startColumn+*endColumn+(numColumns*temp));
+
+            }
+            return output;}
 
         // ----
         // swap
