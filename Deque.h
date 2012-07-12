@@ -212,10 +212,6 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 
                 // <your data>
                 MyDeque* _p;
-                int* startRow;
-                int* endRow;
-                int* startColumn;
-                int* endColumn;
                 std::size_t _i;
             private:
                 // -----
@@ -224,7 +220,8 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 
                 bool valid () const {
                     // <your code>
-                    return true;}
+                    return _i >= 0;
+                    }
 
             public:
                 // -----------
@@ -234,8 +231,8 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
                 /**
 * <your documentation>
 */
-                iterator (/* <your arguments> */) {
-                    // <your code>
+                iterator (MyDeque& p, std::size_t i) : _p(p), _i(i){
+
                     assert(valid());}
 
                 // Default copy, destructor, and copy assignment.
@@ -253,8 +250,8 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
                 reference operator * () const {
                     // <your code>
                     // dummy is just to be able to compile the skeleton, remove it
-                    static value_type dummy;
-                    return dummy;}
+                    //static value_type dummy;
+                    return _p[_i];}
 
                 // -----------
                 // operator ->
@@ -274,7 +271,7 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 * <your documentation>
 */
                 iterator& operator ++ () {
-                    // <your code>
+                    ++_i;
                     assert(valid());
                     return *this;}
 
@@ -296,6 +293,7 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 */
                 iterator& operator -- () {
                     // <your code>
+                    --_i;
                     assert(valid());
                     return *this;}
 
@@ -317,6 +315,7 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 */
                 iterator& operator += (difference_type d) {
                     // <your code>
+                    _i += d;
                     assert(valid());
                     return *this;}
 
@@ -329,6 +328,7 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 */
                 iterator& operator -= (difference_type d) {
                     // <your code>
+                    _i -= d;
                     assert(valid());
                     return *this;}};
 
@@ -358,8 +358,7 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 * <your documentation>
 */
                 friend bool operator == (const const_iterator& lhs, const const_iterator& rhs) {
-                    // <your code>
-                    return true;}
+                    return (lhs._p == rhs._p) && (lhs._i == rhs._i);}
 
                 /**
 * <your documentation>
@@ -393,6 +392,9 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
                 // ----
 
                 // <your data>
+                const MyDeque* _p;
+                std::size_t _i;
+
 
             private:
                 // -----
@@ -400,8 +402,7 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
                 // -----
 
                 bool valid () const {
-                    // <your code>
-                    return true;}
+                    return _i >= 0;}
 
             public:
                 // -----------
@@ -411,8 +412,7 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
                 /**
 * <your documentation>
 */
-                const_iterator (/* <your arguments> */) {
-                    // <your code>
+                const_iterator (const MyDeque& p, std::size_t i) : _p(p), _i(i) {
                     assert(valid());}
 
                 // Default copy, destructor, and copy assignment.
@@ -430,8 +430,7 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
                 reference operator * () const {
                     // <your code>
                     // dummy is just to be able to compile the skeleton, remove it
-                    static value_type dummy;
-                    return dummy;}
+                    return _p[_i];}
 
                 // -----------
                 // operator ->
@@ -451,7 +450,7 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 * <your documentation>
 */
                 const_iterator& operator ++ () {
-                    // <your code>
+                    ++_i;
                     assert(valid());
                     return *this;}
 
@@ -472,7 +471,7 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 * <your documentation>
 */
                 const_iterator& operator -- () {
-                    // <your code>
+                    --_i;
                     assert(valid());
                     return *this;}
 
@@ -492,8 +491,8 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
                 /**
 * <your documentation>
 */
-                const_iterator& operator += (difference_type) {
-                    // <your code>
+                const_iterator& operator += (difference_type d) {
+                    _i += d;
                     assert(valid());
                     return *this;}
 
@@ -504,8 +503,8 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
                 /**
 * <your documentation>
 */
-                const_iterator& operator -= (difference_type) {
-                    // <your code>
+                const_iterator& operator -= (difference_type d) {
+                    _i -= d;
                     assert(valid());
                     return *this;}};
 
@@ -814,7 +813,6 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 * <your documentation>
 */
         size_type size () const {
-            // <your code> 
             size_type output;
             unsigned int temp = *endRow - *startRow;
             if(temp == 0){
