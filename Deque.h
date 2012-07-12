@@ -549,6 +549,8 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 */
         explicit MyDeque (size_type s, const_reference v = value_type(), const allocator_type& a = allocator_type()) {
             // <your code>
+            numColumns = (int) s;
+            numRows = 1;
             container = startRow = endRow = second_a.allocate(1);
 	    container[0] = startColumn =  second_a.allocate(s);
             endColumn = startColumn + s;
@@ -562,6 +564,8 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 */
         MyDeque (const MyDeque& that) {
             // <your code>
+            numColumns = (int) that.size();
+            numRows = 1;
             allocator_type _temp = that._a;
             container = startRow = endRow = _temp.allocate(1);
 	    container[0] = startColumn = _temp.allocate(that.size());
