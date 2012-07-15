@@ -212,7 +212,16 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 
                 // <your data>
                 MyDeque* _p;
-                std::size_t _i;
+               // std::size_t size;
+                int* firstRow;
+                int* lastRow;
+       		int* firstColumn;
+        	int* lastColumn;
+      		int numberRows;
+       		int numberColumns;
+        	size_type size;
+        	int cap;
+
             private:
                 // -----
                 // valid
@@ -220,7 +229,7 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 
                 bool valid () const {
                     // <your code>
-                    return _i >= 0;
+                    return size >= 0;
                     }
 
             public:
@@ -231,9 +240,14 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
                 /**
 * <your documentation>
 */
-                iterator (MyDeque& p, std::size_t i) : _p(p), _i(i){
+               // iterator (MyDeque& p, std::size_t i) : _p(p), _i(i){
+
+                 //   assert(valid());}
+
+                iterator (MyDeque& p, size_type i, int* startRow, int* endRow, int* startColumn, int* endColumn, int numRows, int numCols, int capacity) : _p(p), size(i), firstRow(startRow), lastRow(endRow), firstColumn(startColumn), lastColumn(endColumn), numberRows(numRows), numberColumns(numColumns), cap(capacity){
 
                     assert(valid());}
+
 
                 // Default copy, destructor, and copy assignment.
                 // iterator (const iterator&);
@@ -251,7 +265,7 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
                     // <your code>
                     // dummy is just to be able to compile the skeleton, remove it
                     //static value_type dummy;
-                    return _p[_i];}
+                    return _p[*firstRow][*firstColumn];}
 
                 // -----------
                 // operator ->
@@ -271,7 +285,15 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 * <your documentation>
 */
                 iterator& operator ++ () {
-                    ++_i;
+                   // ++_i;
+                    int temp = numberColumns;
+                    --temp;
+                    if(*firstColumn < temp)
+		        ++firstColumn;
+ 		    else{
+		        ++firstRow;
+		 	firstColumn = _p[firstRow][0];
+		    }
                     assert(valid());
                     return *this;}
 
@@ -293,7 +315,13 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 */
                 iterator& operator -- () {
                     // <your code>
-                    --_i;
+                    if(*firstColumn > 0){
+		        --firstColumn;
+		    }
+		    else{
+			--firstRow;
+			firstColumn = _p[firstRow][0];
+		    }
                     assert(valid());
                     return *this;}
 
@@ -598,6 +626,23 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
 */
         MyDeque& operator = (const MyDeque& rhs) {
             // <your code>
+            if(this == &rhs)
+		return *this;
+            if(rhs.size() == size())
+		std::copy(rhs.begin(), rhs.end(), begin());
+	    else if (rhs.size() < size()){
+		std::copy(rhs.begin(), rhs.end(), begin());
+		resize(rhs.size());
+            }
+            else if (rhs.size() <= capacity()){
+		std::copy(rhs.begin(),  rhs.end(), begin());
+                resize(rhs.size());
+            }
+	    else{
+		clear();
+		reserve(rhs.size());
+		mySize = my_uninitialized_copy(_a, rhs.begin(), rhs.end(), begin());
+	    }
             assert(valid());
             return *this;}
 
@@ -820,7 +865,7 @@ return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end
             }
             else{
                 --temp;
-                output = (size_type)(*startColumn+*endColumn+(numColumns*temp));
+                output = (size_type)((numColumns - *startColumn)+*endColumn+(numColumns*temp));
 
             }
             return output;}
