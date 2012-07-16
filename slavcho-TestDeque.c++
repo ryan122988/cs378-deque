@@ -68,9 +68,9 @@ struct TestDeque : CppUnit::TestFixture {
 		CPPUNIT_ASSERT(d == e);
 		d.push_back(7);
 		CPPUNIT_ASSERT(d != e);
-		d.pop_front();
+		d.pop_back();
 		CPPUNIT_ASSERT(d == e);
-		d.push_front(5);
+		d.push_back(5);
 		CPPUNIT_ASSERT(d != e);
 		d.pop_back();
 		CPPUNIT_ASSERT(d != e);
@@ -86,7 +86,7 @@ struct TestDeque : CppUnit::TestFixture {
 		CPPUNIT_ASSERT(!(d < e));
 		e.push_back(7);
 		CPPUNIT_ASSERT(d < e);
-		d.push_front(8);
+		d.push_back(8);
 		CPPUNIT_ASSERT(e < d);
 	}
 	
@@ -745,11 +745,11 @@ struct TestDeque : CppUnit::TestFixture {
 	// -----
 
 	CPPUNIT_TEST_SUITE(TestDeque); 
-	//CPPUNIT_TEST(test_mydeque_equality_1);
-	/*CPPUNIT_TEST(test_mydeque_equality_2);
+	CPPUNIT_TEST(test_mydeque_equality_1);
+	CPPUNIT_TEST(test_mydeque_equality_2);
 	CPPUNIT_TEST(test_mydeque_equality_3);
 	CPPUNIT_TEST(test_mydeque_less_than_1);
-	CPPUNIT_TEST(test_mydeque_less_than_2);
+	/*CPPUNIT_TEST(test_mydeque_less_than_2);
 	CPPUNIT_TEST(test_mydeque_less_than_3);
 	CPPUNIT_TEST(test_iter_equality_1);
 	CPPUNIT_TEST(test_iter_equality_2);
